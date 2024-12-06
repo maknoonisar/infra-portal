@@ -1,0 +1,292 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [69.146, 28.486]
+        },
+        "type": "Feature",
+        "id": 0,
+        "properties": {
+          "Latitude": 28.486,
+          "Location__": "Sohbatpur",
+          "Longitude": 69.146
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [68.26, 28.42]
+        },
+        "type": "Feature",
+        "id": 2,
+        "properties": {
+          "Latitude": 28.42,
+          "Location__": "Naseerabad",
+          "Longitude": 68.26
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [68.116, 28.553]
+        },
+        "type": "Feature",
+        "id": 3,
+        "properties": {
+          "Latitude": 28.553,
+          "Location__": "Usta Muhammad",
+          "Longitude": 68.116
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [66.3126, 30.5851]
+        },
+        "type": "Feature",
+        "id": 4,
+        "properties": {
+          "Latitude": 30.5851,
+          "Location__": "Hernai",
+          "Longitude": 66.3126
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [66.7028, 27.6011]
+        },
+        "type": "Feature",
+        "id": 5,
+        "properties": {
+          "Latitude": 27.6011,
+          "Location__": "Bijar wadh",
+          "Longitude": 66.7028
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [69.3015, 29.5632]
+        },
+        "type": "Feature",
+        "id": 6,
+        "properties": {
+          "Latitude": 29.5632,
+          "Location__": "Kohlu",
+          "Longitude": 69.3015
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [65.5588, 27.8046]
+        },
+        "type": "Feature",
+        "id": 7,
+        "properties": {
+          "Latitude": 27.8046,
+          "Location__": "Khuzdar",
+          "Longitude": 65.5588
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [68.6135, 30.3739]
+        },
+        "type": "Feature",
+        "id": 8,
+        "properties": {
+          "Latitude": 30.3739,
+          "Location__": "Loralai",
+          "Longitude": 68.6135
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [68.5867, 30.0286]
+        },
+        "type": "Feature",
+        "id": 9,
+        "properties": {
+          "Latitude": 30.0286,
+          "Location__": "Qila Saifullah",
+          "Longitude": 68.5867
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [65.779, 26.5053]
+        },
+        "type": "Feature",
+        "id": 10,
+        "properties": {
+          "Latitude": 26.5053,
+          "Location__": "Awaran",
+          "Longitude": 65.779
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [66.7871, 25.3551]
+        },
+        "type": "Feature",
+        "id": 11,
+        "properties": {
+          "Latitude": 25.3551,
+          "Location__": "Hub",
+          "Longitude": 66.7871
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [67.2167, 28.85]
+        },
+        "type": "Feature",
+        "id": 12,
+        "properties": {
+          "Latitude": 28.85,
+          "Location__": "Kachi",
+          "Longitude": 67.2167
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [69.1736, 29.0358]
+        },
+        "type": "Feature",
+        "id": 13,
+        "properties": {
+          "Latitude": 29.0358,
+          "Location__": "Dera Bugti",
+          "Longitude": 69.1736
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [67.1239, 28.5972]
+        },
+        "type": "Feature",
+        "id": 15,
+        "properties": {
+          "Latitude": 28.5972,
+          "Location__": "Jhal Magsi",
+          "Longitude": 67.1239
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [66.607, 29.0387]
+        },
+        "type": "Feature",
+        "id": 16,
+        "properties": {
+          "Latitude": 29.0387,
+          "Location__": "Kalat",
+          "Longitude": 66.607
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [67.5651, 30.3188]
+        },
+        "type": "Feature",
+        "id": 17,
+        "properties": {
+          "Latitude": 30.3188,
+          "Location__": "Ziarat",
+          "Longitude": 67.5651
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [67.6225, 30.0669]
+        },
+        "type": "Feature",
+        "id": 18,
+        "properties": {
+          "Latitude": 30.0669,
+          "Location__": "Qila Abdullah",
+          "Longitude": 67.6225
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [65.517, 27.523]
+        },
+        "type": "Feature",
+        "id": 19,
+        "properties": {
+          "Latitude": 27.523,
+          "Location__": "Washuk",
+          "Longitude": 65.517
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [66.4447, 30.9223]
+        },
+        "type": "Feature",
+        "id": 20,
+        "properties": {
+          "Latitude": 30.9223,
+          "Location__": "Chaman",
+          "Longitude": 66.4447
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [66.85, 29.8]
+        },
+        "type": "Feature",
+        "id": 21,
+        "properties": {
+          "Latitude": 29.8,
+          "Location__": "Mastung",
+          "Longitude": 66.85
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [68.12, 28.25]
+        },
+        "type": "Feature",
+        "id": 22,
+        "properties": {
+          "Latitude": 28.25,
+          "Location__": "Jaffarabad",
+          "Longitude": 68.12
+        }
+      },
+      {
+        "geometry": {
+          "type": "Point",
+          "coordinates": [66.9, 25.7]
+        },
+        "type": "Feature",
+        "id": 23,
+        "properties": {
+          "Latitude": 25.7,
+          "Location__": "Lasbella",
+          "Longitude": 66.9
+        }
+      }
+    ]
+  }
+  

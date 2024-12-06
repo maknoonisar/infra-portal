@@ -1,0 +1,3214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Infra</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <style>
+    .nav-row {
+      display: flex;
+      /* Align items in a row */
+      justify-content: space-between;
+      /* Space out items */
+      padding: 3px 25px;
+      border: none;
+      /* Ensure no border */
+      margin: 0;
+      /* Ensure no margin causing lines */
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      /* Stack image and label vertically */
+      align-items: center;
+      /* Center align content horizontally */
+      width: 25%;
+      color: white;
+      border: none;
+      /* Ensure no border */
+      margin: 0;
+      /* Ensure no margin causing lines */
+    }
+
+    .nav-image {
+      width: 45px;
+      /* Fixed width */
+      height: 45px;
+      /* Fixed height */
+      object-fit: cover;
+      /* Ensures the image covers the specified dimensions */
+      cursor: pointer;
+      border: 2px solid white;
+      /* White border */
+      border-radius: 8px;
+      /* Adjust the radius for rounded corners */
+      transition: border-color 0.3s, box-shadow 0.3s;
+      /* Smooth transition for border color and shadow */
+    }
+
+    /* Hover effect */
+    .nav-image:hover {
+      border-color: #00f;
+      /* Blue border on hover */
+      box-shadow: 0 0 5px rgba(0, 0, 255, 0.5);
+      /* Add a subtle blue shadow */
+    }
+
+    /* Selected state */
+    .nav-image.selected {
+      border-color: #f00;
+      /* Red border for selected state */
+      box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+      /* Add a subtle red shadow */
+    }
+
+    .nav-button {
+      background: none;
+      /* Remove button background */
+      color: white;
+      padding: 0;
+      /* Remove padding */
+      text-align: center;
+      cursor: default;
+      /* Default cursor for text */
+      border: none;
+      /* Remove border */
+      font-weight: bolder;
+      transition: none;
+      /* Remove transition effects */
+      margin-top: 5px;
+      font-size: 15px;
+      /* Set font size to 15px */
+    }
+
+    .box {
+      border: 1px solid black;
+      padding: 20px;
+      text-align: center;
+      font-size: 18px;
+    }
+  </style>
+
+  <style>
+    .custom-caption {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px;
+    padding-bottom: 20px;
+    margin-bottom: -40px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 320px;
+}
+
+  </style>
+</head>
+
+<body>
+  <video id="bgVideo" autoplay muted loop>
+    <source src="bg.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- HEADER -->
+  <div id="top-div">
+    <div id="hello-text">Infrastructure Portal</div>
+  </div>
+
+  <!-- MAP -->
+  <div id="map"></div>
+  <button id="menuButton">MENU</button>
+
+
+
+  <!-- menu container -->
+  <div id="menuContainer" class="menu-hidden">
+    <div class="checkbox-wrapper-26">
+      <input type="checkbox" id="layer1">
+      <label for="layer1">
+        <div id="tickMark1" class="tick_mark"></div>
+      </label>
+      <button id="b1">Monsoon Damages 2024</button>
+    </div>
+
+    <div id="subButtonContainer" class="sub-buttons-hidden" style="display: none;">
+
+
+
+     
+
+      <!-- Sindh Switch and Button Set -->
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefaultSindh">
+        <label class="form-check-label" for="flexSwitchCheckDefaultSindh">Sindh</label>
+      </div>
+
+      <div id="sindhNavContainer" class="nav-container" style="display: none;">
+        <!-- Button set for Sindh -->
+        <div class="nav-row">
+          <div class="nav-item" data-layer="sindhHousesLayer">
+            <img src="icons/house.jpg" alt="Image-1" class="nav-image" id="houseSindh">
+            <label for="house" class="nav-button">Buildings</label>
+          </div>
+          <!-- <div class="nav-item" data-layer="sindhCommunicationLayer">
+            <img src="icons/communication.jpg" alt="Image-3" class="nav-image" id="Communicationsindh">
+            <label for="Communication" class="nav-button">Comm</label>
+          </div> -->
+          <div class="nav-item" data-layer="sindhBridgesLayer">
+            <img src="icons/bridge.jpg" alt="Image-2" class="nav-image" id="bridgeSindh">
+            <label for="bridge" class="nav-button">Bridges</label>
+          </div>
+          <div class="nav-item" data-layer="sindhRoadsLayer">
+            <img src="icons/roads.jpg" alt="Image-3" class="nav-image" id="roadsSindh">
+            <label for="roads" class="nav-button">Roads</label>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- Balochistan Switch and Button Set -->
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefaultBalochistan">
+        <label class="form-check-label" for="flexSwitchCheckDefaultBalochistan">Balochistan</label>
+      </div>
+
+      <div id="balochistanNavContainer" class="nav-container" style="display: none;">
+        <!-- Button set for Balochistan -->
+        <div class="nav-row">
+          <div class="nav-item" data-layer="balochistanHousesLayer">
+            <img src="icons/house.jpg" alt="Image-1" class="nav-image" id="houseBalochistan">
+            <label for="house" class="nav-button">Buildings</label>
+          </div>
+          <!-- <div class="nav-item" data-layer="balochistanCommunicationLayer">
+            <img src="icons/communication.jpg" alt="Image-3" class="nav-image" id="Communicationbalochistan">
+            <label for="Communication" class="nav-button">Comm</label>
+          </div> -->
+          
+          <div class="nav-item" data-layer="balochistanBridgesLayer">
+            <img src="icons/bridge.jpg" alt="Image-2" class="nav-image" id="bridgeBalochistan">
+            <label for="bridge" class="nav-button">Bridges</label>
+          </div>
+          <div class="nav-item" data-layer="balochistanRoadsLayer">
+            <img src="icons/roads.jpg" alt="Image-3" class="nav-image" id="roadsBalochistan">
+            <label for="roads" class="nav-button">Roads</label>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- kpk Switch and Button Set -->
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefaultKpk">
+        <label class="form-check-label" for="flexSwitchCheckDefaultKpk">KPK</label>
+      </div>
+
+      <div id="kpkNavContainer" class="nav-container" style="display: none;">
+        <!-- Button set for kpk -->
+        <div class="nav-row">
+          <div class="nav-item" data-layer="kpkHousesLayer">
+            <img src="icons/house.jpg" alt="Image-1" class="nav-image" id="housekpk">
+            <label for="house" class="nav-button">Buildings</label>
+          </div>
+         
+          <div class="nav-item" data-layer="kpkBridgesLayer">
+            <img src="icons/bridge.jpg" alt="Image-2" class="nav-image" id="bridgekpk">
+            <label for="bridge" class="nav-button">Bridges</label>
+          </div>
+          <div class="nav-item" data-layer="kpkRoadsLayer">
+            <img src="icons/roads.jpg" alt="Image-3" class="nav-image" id="roadskpk">
+            <label for="roads" class="nav-button">Roads</label>
+          </div>
+        </div>
+
+      </div>
+
+
+   <!-- Punjab Switch and Button Set -->
+   <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefaultPunjab">
+    <label class="form-check-label" for="flexSwitchCheckDefaultPunjab">Punjab</label>
+  </div>
+
+  <div id="punjabNavContainer" class="nav-container" style="display: none;">
+    <!-- Button set for Punjab -->
+    <div class="nav-row">
+      <div class="nav-item" data-layer="punjabHousesLayer">
+        <img src="icons/house.jpg" alt="Image-1" class="nav-image" id="housePunjab">
+        <label for="house" class="nav-button">Buildings</label>
+      </div>
+      
+      <div class="nav-item" data-layer="punjabBridgesLayer">
+        <img src="icons/bridge.jpg" alt="Image-2" class="nav-image" id="bridgePunjab">
+        <label for="bridge" class="nav-button">Bridges</label>
+      </div>
+      <div class="nav-item" data-layer="punjabRoadsLayer">
+        <img src="icons/roads.jpg" alt="Image-3" class="nav-image" id="roadsPunjab">
+        <label for="roads" class="nav-button">Roads</label>
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+      <!-- Ajk Switch and Button Set -->
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefaultAjk">
+        <label class="form-check-label" for="flexSwitchCheckDefaultAjk">Ajk</label>
+      </div>
+
+      <div id="AjkNavContainer" class="nav-container" style="display: none;">
+        <!-- Button set for Ajk -->
+        <div class="nav-row">
+          <div class="nav-item" data-layer="AjkHousesLayer">
+            <img src="icons/house.jpg" alt="Image-1" class="nav-image" id="houseAjk">
+            <label for="house" class="nav-button">Buildings</label>
+          </div>
+        
+          <div class="nav-item" data-layer="AjkBridgesLayer">
+            <img src="icons/bridge.jpg" alt="Image-2" class="nav-image" id="bridgeAjk">
+            <label for="bridge" class="nav-button">Bridges</label>
+          </div>
+          <div class="nav-item" data-layer="AjkRoadsLayer">
+            <img src="icons/roads.jpg" alt="Image-3" class="nav-image" id="roadsAjk">
+            <label for="roads" class="nav-button">Roads</label>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- gb Switch and Button Set -->
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefaultGb">
+        <label class="form-check-label" for="flexSwitchCheckDefaultGb">Gilgit Baltistan</label>
+      </div>
+
+      <div id="gbNavContainer" class="nav-container" style="display: none;">
+        <!-- Button set for gb -->
+        <div class="nav-row">
+          <div class="nav-item" data-layer="gbHousesLayer">
+            <img src="icons/house.jpg" alt="Image-1" class="nav-image" id="housegb">
+            <label for="house" class="nav-button">Buildings</label>
+          </div>
+          <div class="nav-item" data-layer="gbBridgesLayer">
+            <img src="icons/bridge.jpg" alt="Image-2" class="nav-image" id="bridgegb">
+            <label for="bridge" class="nav-button">Bridges</label>
+          </div>
+          <div class="nav-item" data-layer="gbRoadsLayer">
+            <img src="icons/roads.jpg" alt="Image-3" class="nav-image" id="roadsgb">
+            <label for="roads" class="nav-button">Roads</label>
+          </div>
+         
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+    <!-- Flood Section -->
+    <div class="checkbox-wrapper-26">
+      <input type="checkbox" id="layer2">
+      <label for="layer2">
+        <div id="tickMark2" class="tick_mark"></div>
+      </label>
+      <button id="b2">Flood</button>
+    </div>
+
+    <div id="subButtonContainer2" class="sub-buttons-hidden" style="display: none;">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch1">
+        <label class="form-check-label" for="floodSwitch1">Sindh</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch2">
+        <label class="form-check-label" for="floodSwitch2">Balochistan</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch3">
+        <label class="form-check-label" for="floodSwitch3">Punjab</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch1">
+        <label class="form-check-label" for="floodSwitch4">Kpk</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch2">
+        <label class="form-check-label" for="floodSwitch5">Ajk</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch3">
+        <label class="form-check-label" for="floodSwitch6">Gilgit</label>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+<!-- Glof Section -->
+    <div class="checkbox-wrapper-26">
+      <input type="checkbox" id="layer3">
+      <label for="layer3">
+        <div class="tick_mark"></div>
+      </label>
+      <button>Glof</button>
+    </div>
+
+    <div id="subButtonContainer3" class="sub-buttons-hidden" style="display: none;">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch1">
+        <label class="form-check-label" for="floodSwitch1">Sindh</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch2">
+        <label class="form-check-label" for="floodSwitch2">Balochistan</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch3">
+        <label class="form-check-label" for="floodSwitch3">Punjab</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch4">
+        <label class="form-check-label" for="floodSwitch4">Kpk</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch5">
+        <label class="form-check-label" for="floodSwitch5">Ajk</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="floodSwitch6">
+        <label class="form-check-label" for="floodSwitch6">Gilgit</label>
+      </div>
+    </div>
+
+<!-- Landslide Section -->
+    <div class="checkbox-wrapper-26">
+      <input type="checkbox" id="layer4">
+      <label for="layer4">
+        <div class="tick_mark"></div>
+      </label>
+      <button>Landslide</button>
+    </div>
+    <div id="subButtonContainer4" class="sub-buttons-hidden" style="display: none;">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="LandslideSwitch1">
+        <label class="form-check-label" for="LandslideSwitch1">Sindh</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="LandslideSwitch2">
+        <label class="form-check-label" for="LandslideSwitch2">Balochistan</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="LandslideSwitch3">
+        <label class="form-check-label" for="LandslideSwitch3">Punjab</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="LandslideSwitch4">
+        <label class="form-check-label" for="LandslideSwitch4">Kpk</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="LandslideSwitch5">
+        <label class="form-check-label" for="LandslideSwitch5">Ajk</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="LandslideSwitch6">
+        <label class="form-check-label" for="LandslideSwitch6">Gilgit</label>
+      </div>
+    </div>
+
+<!-- Seismic Section -->
+    <div class="checkbox-wrapper-26">
+      <input type="checkbox" id="layer5">
+      <label for="layer5">
+        <div class="tick_mark"></div>
+      </label>
+      <button>Seismic</button>
+    </div>
+    <div id="subButtonContainer5" class="sub-buttons-hidden" style="display: none;">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="seismicSwitch1">
+        <label class="form-check-label" for="seismicSwitch1">Sindh</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="seismicSwitch2">
+        <label class="form-check-label" for="seismicSwitch2">Balochistan</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="seismicSwitch3">
+        <label class="form-check-label" for="seismicSwitch3">Punjab</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="seismicSwitch4">
+        <label class="form-check-label" for="seismicSwitch4">Kpk</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="seismicSwitch5">
+        <label class="form-check-label" for="seismicSwitch5">Ajk</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="seismicSwitch6">
+        <label class="form-check-label" for="floodSwitch6">Gilgit</label>
+      </div>
+    </div>
+
+<!-- Building collapse Section -->
+    <div class="checkbox-wrapper-26">
+      <input type="checkbox" id="layer6">
+      <label for="layer6">
+        <div class="tick_mark"></div>
+      </label>
+      <button>Building Collapse</button>
+    </div>
+    <div id="subButtonContainer6" class="sub-buttons-hidden" style="display: none;">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="collapseSwitch1">
+        <label class="form-check-label" for="collapseSwitch1">Sindh</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="collapseSwitch2">
+        <label class="form-check-label" for="collapseSwitch2">Balochistan</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="collapseSwitch3">
+        <label class="form-check-label" for="collapseSwitch3">Punjab</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="collapseSwitch4">
+        <label class="form-check-label" for="collapseSwitch4">Kpk</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="collapseSwitch5">
+        <label class="form-check-label" for="collapseSwitch5">Ajk</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="collapseSwitch6">
+        <label class="form-check-label" for="collapseSwitch6">Gilgit</label>
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+  <!-- Dynamic media display section for Sindh -->
+  <div class="container" id="media-sindh" style="display: none;">
+
+    <!-- Carousel Section -->
+    <div class="row">
+      <div class="col-md-6"> <!-- Use col-md-6 to take half the width on medium and larger screens -->
+        <h2 style="text-align: center;">Houses Causes/Losses</h2>
+        <div id="sindhCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+
+            <!-- Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary/Sindh\10-10-2024\Residential Infra\Causes\Differential Settlement.jpg" class="d-block w-100" alt="Sindh Picture 1" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Differential Settlement</p>
+              </div>
+            </div>
+
+            <!-- Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Causes\Inadequate Drainage.jpg" class="d-block w-100" alt="Sindh Picture 2" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Inadequate Drainage</p>
+              </div>
+            </div>
+
+            <!-- Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Causes\Kaccha (Adobe) Houses.png" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Kaccha (Adobe) Houses</p>
+              </div>
+            </div>
+
+            <!-- Image 4 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Causes\Lack of Maintenance.jpg" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Lack of Maintenance</p>
+              </div>
+            </div>
+
+             <!-- Image 5 -->
+             <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Causes\Low Lying Areas.jpg" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Low Lying Areas</p>
+              </div>
+            </div>
+
+              <!-- Image 6 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Causes\Poor Construction Methodology.jpg" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+                <div class="carousel-caption custom-caption">
+                  <p>Poor Construction Methodology</p>
+                </div>
+              </div>
+
+               <!-- Image 7 -->
+               <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Causes\Soil Erosion.jpg" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+                <div class="carousel-caption custom-caption">
+                  <p>Soil Erosion</p>
+                </div>
+              </div>
+
+               <!-- Image 8 -->
+               <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Losses\Hyderabad 2.jpg" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+                <div class="carousel-caption custom-caption">
+                  <p>Hyderabad 2</p>
+                </div>
+              </div>
+
+               <!-- Image 9 -->
+               <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Losses\Hyderabad.jpg" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+                <div class="carousel-caption custom-caption">
+                  <p>Hyderabad</p>
+                </div>
+              </div>
+
+                <!-- Image 10 -->
+                <div class="carousel-item">
+                  <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Losses\kamber Talukha.jpg" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+                  <div class="carousel-caption custom-caption">
+                    <p>kamber Talukha</p>
+                  </div>
+                </div>
+
+            <!-- Video 1 -->
+            <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Losses\Videos\District Thatta.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="carousel-caption custom-caption">
+                <p>District Thatta</p>
+              </div>
+            </div>
+
+             <!-- Video 2 -->
+             <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Losses\Videos\Gulshan-e-Iqbal, Karachi.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="carousel-caption custom-caption">
+                <p>Gulshan-e-Iqbal, Karachi</p>
+              </div>
+            </div>
+
+             <!-- Video 3 -->
+             <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Losses\Videos\Sukkur.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="carousel-caption custom-caption">
+                <p>Sukkur</p>
+              </div>
+            </div>
+
+               <!-- Video 4 -->
+               <div class="carousel-item">
+                <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                  <source src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Losses\Videos\Thatta.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+                <div class="carousel-caption custom-caption">
+                  <p>Thatta</p>
+                </div>
+              </div>
+
+          </div>
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#sindhCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#sindhCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#sindhCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#sindhCarousel" data-slide-to="1"></li>
+            <li data-target="#sindhCarousel" data-slide-to="2"></li>
+            <li data-target="#sindhCarousel" data-slide-to="3"></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="col-md-6"> <!-- Use col-md-6 to take half the width on medium and larger screens -->
+        <!-- Carousel Recommendation Section -->
+        <h2 style="text-align: center;"> Houses Recommendation</h2>
+        <div id="sindhRecommendationCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+
+            <!-- Recommendation Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Recomm\Bituminous Waterproof Coatings.jpg" class="d-block w-100" alt="Sindh Recommendation 1" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Bituminous Waterproof Coatings</p>
+              </div>
+            </div>
+
+            <!-- Recommendation Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Recomm\Cement Based Waterproofing.jpg" class="d-block w-100" alt="Sindh Recommendation 2" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Cement Based Waterproofing</p>
+              </div>
+            </div>
+
+            <!-- Recommendation Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Recomm\Elevated Housing.jpg" class="d-block w-100" alt="Sindh Recommendation 2" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Elevated Housing</p>
+              </div>
+            </div>
+
+              <!-- Recommendation Image 4 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Recomm\Pre Fab Housing.jpg" class="d-block w-100" alt="Sindh Recommendation 2" style="height: 350px;">
+                <div class="carousel-caption custom-caption">
+                  <p>Pre Fab Housing</p>
+                </div>
+              </div>
+
+              <!-- Recommendation Image 5 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Residential Infra\Recomm\Slopped Roofing.jpg" class="d-block w-100" alt="Sindh Recommendation 2" style="height: 350px;">
+                <div class="carousel-caption custom-caption">
+                  <p>Slopped Roofing</p>
+                </div>
+              </div>
+
+          </div>
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#sindhRecommendationCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#sindhRecommendationCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#sindhRecommendationCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#sindhRecommendationCarousel" data-slide-to="1"></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- Carousel Section -->
+    <div class="row">
+      <div class="col-md-6"> <!-- Use col-md-6 to take half the width on medium and larger screens -->
+        <h2 style="text-align: center;">Bridges Causes/Losses</h2>
+        <div id="sindhCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+
+            <!-- Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Bridges\Causes\Abutment Scouring.jpg" class="d-block w-100" alt="Sindh Picture 1" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Abutment Scouring</p>
+              </div>
+            </div>
+
+            <!-- Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Bridges\Causes\Choking of Culverts.jpg" class="d-block w-100" alt="Sindh Picture 2" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Choking of Culverts</p>
+              </div>
+            </div>
+
+            <!-- Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Bridges\Causes\Debris Collision.jpg" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Debris Collision</p>
+              </div>
+            </div>
+
+
+               <!-- Image 4 -->
+               <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Bridges\Causes\Pier Scouring.jpg" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+                <div class="carousel-caption custom-caption">
+                  <p>Pier Scouring</p>
+                </div>
+              </div>
+
+              <!-- Image 5 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Bridges\Causes\Straining of Load Bearing Capacity .jpg" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Straining of Load Bearing Capacity</p>
+              </div>
+            </div>
+
+                <!-- Image 6 -->
+                <div class="carousel-item">
+                  <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Bridges\Causes\Weakening of Piers.jpg" class="d-block w-100" alt="Sindh Picture 3" style="height: 350px;">
+                  <div class="carousel-caption custom-caption">
+                    <p>Weakening of Piers</p>
+                  </div>
+                </div>
+
+
+            <!-- Video 1 -->
+            <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="media/sindh/Videos/1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="carousel-caption custom-caption">
+                <p>Sindh Video</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#sindhCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#sindhCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#sindhCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#sindhCarousel" data-slide-to="1"></li>
+            <li data-target="#sindhCarousel" data-slide-to="2"></li>
+            <li data-target="#sindhCarousel" data-slide-to="3"></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="col-md-6"> <!-- Use col-md-6 to take half the width on medium and larger screens -->
+        <!-- Carousel Recommendation Section -->
+        <h2 style="text-align: center;"> Bridges Recommendation</h2>
+        <div id="sindhRecommendationCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+
+            <!-- Recommendation Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Bridges\Recomm\Bracing Critical Comm Infra.jpg" class="d-block w-100" alt="Sindh Recommendation 1" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Bracing Critical Comm Infra</p>
+              </div>
+            </div>
+
+            <!-- Recommendation Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Bridges\Recomm\Bridge Elevation.jpg" class="d-block w-100" alt="Sindh Recommendation 2" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Bridge Elevation</p>
+              </div>
+            </div>
+
+            <!-- Recommendation Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Bridges\Recomm\Concrete Blocks around Piers.jpg" class="d-block w-100" alt="Sindh Recommendation 2" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Concrete Blocks around Piers</p>
+              </div>
+            </div>
+             <!-- Recommendation Image 4 -->
+             <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Sindh\10-10-2024\Bridges\Recomm\Ripraps.jpg" class="d-block w-100" alt="Sindh Recommendation 2" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Ripraps</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#sindhRecommendationCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#sindhRecommendationCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#sindhRecommendationCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#sindhRecommendationCarousel" data-slide-to="1"></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Dynamic media display section for kp -->
+  <div class="container" id="media-kp" style="display: none;">
+
+
+    <!-- Carousel Section -->
+    <div class="row">
+      <div class="col-md-6">
+        <h2 style="text-align: center;"> Houses Causes/Losses</h2>
+        <div id="kpkCarousel" class="carousel slide" data-ride="carousel">
+
+          <div class="carousel-inner">
+
+            <!-- Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Causes\Blocked Drainage.jpg" class="d-block w-100" alt="kpk Picture 1" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Blocked Drainage</p>
+            </div>
+            </div>
+
+            <!-- Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Causes\Construction Methodology.jpg" class="d-block w-100" alt="kpk Picture 2" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Construction Methodology</p>
+            </div>
+            </div>
+
+            <!-- Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Causes\Cracking.jpg" class="d-block w-100" alt="kpk Picture 3" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Cracking</p>
+            </div>
+            </div>
+
+            <!-- Image 4 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Causes\Differential Settlement.jpg" class="d-block w-100" alt="kpk Picture 4" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Differential Settlement</p></div>
+            </div>
+
+            <!-- Image 5 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Causes\Foundation Failure.jpg" class="d-block w-100" alt="kpk Picture 5" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Foundation Failure</p></div>
+            </div>
+
+            <!-- Image 6 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Causes\Foundation Soil Erosion.jpg" class="d-block w-100" alt="kpk Picture 6" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Foundation Soil Erosion</p></div>
+            </div>
+
+            <!-- Image 7 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Causes\Ground Movement.jpg" class="d-block w-100" alt="kpk Picture 7" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Ground Movement</p></div>
+            </div>
+
+            <!-- Image 8 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Causes\Soil Settlement.jpg" class="d-block w-100" alt="kpk Picture 8" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Soil Settlement</p></div>
+            </div>
+
+
+
+
+              <!-- Image 9 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Lossess\Jandola Bazar - Tank 2.jpg" class="d-block w-100" alt="kpk Picture 7" style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Jandola Bazar - Tank 2</p></div>
+              </div>
+  
+              <!-- Image 10 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Lossess\Jandola Bazar - Tank.jpg" class="d-block w-100" alt="kpk Picture 8" style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Jandola Bazar - Tank</p></div>
+              </div>
+
+
+
+                <!-- Image 11 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Lossess\Upper Dir 2.jpg" class="d-block w-100" alt="kpk Picture 7" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Upper Dir 2</p></div>
+            </div>
+
+            <!-- Image 12 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Lossess\Upper Dir.jpg" class="d-block w-100" alt="kpk Picture 8" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Upper Dir</p></div>
+            </div>
+            
+
+             <!-- Image 13 -->
+             <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Lossess\Upper Kohistan.jpg" class="d-block w-100" alt="kpk Picture 8" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Upper Kohistan</p></div>
+            </div>
+
+            <!-- Video 1 -->
+            <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Lossess\Videos\Upper Kohistan 2.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="carousel-caption custom-caption"><p>Upper Kohistan 2</p></div>
+            </div>
+
+            <!-- Video 2 -->
+            <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Lossess\Videos\Upper Kohistan 3.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="carousel-caption custom-caption"><p>Upper Kohistan 3</p></div>
+            </div>
+
+            <!-- Video 3 -->
+            <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Lossess\Videos\Upper Kohistan.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="carousel-caption custom-caption"><p>Upper Kohistan</p></div>
+            </div>
+
+            
+          </div>
+
+
+
+
+
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#kpkCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#kpkCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#kpkCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#kpkCarousel" data-slide-to="1"></li>
+            <li data-target="#kpkCarousel" data-slide-to="2"></li>
+            <li data-target="#kpkCarousel" data-slide-to="3"></li>
+            <li data-target="#kpkCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2 style="text-align: center;"> Houses Recommendation </h2>
+        <div id="kpkRecommendationCarousel" class="carousel slide" data-ride="carousel">
+
+          <div class="carousel-inner">
+
+            <!-- Recommendation Images -->
+            <!-- Recommendation Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Recomm\Adequate slope and Drainage System.jpg" class="d-block w-100" alt="kpk Recommendation 1"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Adequate slope and Drainage System</p></div>
+            </div>
+
+            <!-- Recommendation Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Recomm\Band Beams & Columns.jpg" class="d-block w-100" alt="kpk Recommendation 2"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Band Beams & Columns</p></div>
+            </div>
+
+            <!-- Recommendation Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Recomm\Epoxy Injections for Cracks.jpg" class="d-block w-100" alt="kpk Recommendation 3"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Epoxy Injections for Cracks</p></div>
+            </div>
+
+            <!-- Recommendation Image 4 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Recomm\Improved Adobe Structures.jpg" class="d-block w-100" alt="kpk Recommendation 4"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Improved Adobe Structures</p></div>
+            </div>
+
+            <!-- Recommendation Image 5 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Recomm\Pre-Cast.jpg" class="d-block w-100" alt="kpk Recommendation 5"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Pre-Cast</p></div>
+            </div>
+
+            <!-- Recommendation Image 6 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Recomm\Pre-Fab.jpg" class="d-block w-100" alt="kpk Recommendation 6"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Pre-Fab</p></div>
+            </div>
+
+            <!-- Recommendation Image 7 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Recomm\Sloped Pitched Roofs.jpg" class="d-block w-100" alt="kpk Recommendation 7"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Sloped Pitched Roofs</p></div>
+            </div>
+
+            <!-- Recommendation Image 8 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Recomm\Stitching of Cracks.jpg" class="d-block w-100" alt="kpk Recommendation 8"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Stitching of Cracks</p></div>
+            </div>
+
+            <!-- Recommendation Image 9 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Recomm\Unclogging of Drains.jpg" class="d-block w-100" alt="kpk Recommendation 9"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Unclogging of Drains</p></div>
+            </div>
+
+            <!-- Recommendation Image 10 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Residential Infra\Recomm\Water Proof Membranes.jpg" class="d-block w-100" alt="kpk Recommendation 10"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Water Proof Membranes</p></div>
+            </div>
+
+           
+
+
+          </div>
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#kpkRecommendationCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#kpkRecommendationCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#kpkRecommendationCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#kpkRecommendationCarousel" data-slide-to="1"></li>
+            <li data-target="#kpkRecommendationCarousel" data-slide-to="2"></li>
+            <li data-target="#kpkRecommendationCarousel" data-slide-to="3"></li>
+            <li data-target="#kpkRecommendationCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel Section -->
+    <div class="row">
+      <div class="col-md-6">
+        <h2 style="text-align: center;"> Bridges Causes/Losses</h2>
+        <div id="kpkCarousel" class="carousel slide" data-ride="carousel">
+
+          <div class="carousel-inner">
+
+            <!-- Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Causes\Abutment Scouring.jpg" class="d-block w-100" alt="kpk Picture 1" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Abutment Scouring</p>
+            </div>
+            </div>
+
+            <!-- Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Causes\Debris Collision.jpg" class="d-block w-100" alt="kpk Picture 2" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Debris Collision</p>
+            </div>
+            </div>
+
+            <!-- Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Causes\Design Deficiencies.jpg" class="d-block w-100" alt="kpk Picture 3" style="height: 350px;">
+              <div class="carousel-caption custom-caption">
+                <p>Design Deficiencies</p>
+            </div>
+            </div>
+
+            <!-- Image 4 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Causes\Pier Scouring.jpg" class="d-block w-100" alt="kpk Picture 4" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Pier Scouring</p></div>
+            </div>
+
+            <!-- Image 5 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Lossess\Boya Bridge, north waziristan.jpg" class="d-block w-100" alt="kpk Picture 5" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Boya Bridge, north waziristan</p></div>
+            </div>
+
+            <!-- Image 6 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Lossess\Chitral Lower.jpg" class="d-block w-100" alt="kpk Picture 6" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Chitral Lower</p></div>
+            </div>
+
+            <!-- Image 7 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Lossess\Chitral.jpg" class="d-block w-100" alt="kpk Picture 7" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Chitral</p></div>
+            </div>
+
+            <!-- Image 8 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Lossess\Hassu Khel Bridge, North Waziristan.jpg" class="d-block w-100" alt="kpk Picture 8" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Hassu Khel Bridge, North Waziristan</p></div>
+            </div>
+
+            <!-- Image 9 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Lossess\Khyber.jpg" class="d-block w-100" alt="kpk Picture 9" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Khyber</p></div>
+            </div>
+
+            <!-- Image 10 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Lossess\Mahandri Bridge, Manshera.jpg" class="d-block w-100" alt="kpk Picture 10" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Mahandri Bridge, Manshera</p></div>
+            </div>
+
+            <!-- Image 11 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Lossess\Meragram No 2, Chitral Upper.jpg" class="d-block w-100" alt="kpk Picture 11" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Meragram No 2, Chitral Upper</p></div>
+            </div>
+
+            
+            <!-- Video 1 -->
+            <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Lossess\Videos\Bridge Damage, Tank.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="carousel-caption custom-caption"><p>Bridge Damage, Tank</p></div>
+            </div>
+
+        
+          </div>
+
+
+
+
+
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#kpkCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#kpkCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#kpkCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#kpkCarousel" data-slide-to="1"></li>
+            <li data-target="#kpkCarousel" data-slide-to="2"></li>
+            <li data-target="#kpkCarousel" data-slide-to="3"></li>
+            <li data-target="#kpkCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2 style="text-align: center;"> Bridges Recommendation </h2>
+        <div id="kpkRecommendationCarousel" class="carousel slide" data-ride="carousel">
+
+          <div class="carousel-inner">
+
+            <!-- Recommendation Images -->
+            <!-- Recommendation Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Recomm\Bracing Critical Comm Infra.jpg" class="d-block w-100" alt="kpk Recommendation 1"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Bracing Critical Comm Infra</p></div>
+            </div>
+
+            <!-- Recommendation Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Recomm\Bridge Elevation.jpg" class="d-block w-100" alt="kpk Recommendation 2"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Bridge Elevation</p></div>
+            </div>
+
+            <!-- Recommendation Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\KPK\10-10-2024\Bridges\Recomm\Ripraps.jpg" class="d-block w-100" alt="kpk Recommendation 3"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Ripraps</p></div>
+            </div>
+
+           
+
+
+          </div>
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#kpkRecommendationCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#kpkRecommendationCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#kpkRecommendationCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#kpkRecommendationCarousel" data-slide-to="1"></li>
+            <li data-target="#kpkRecommendationCarousel" data-slide-to="2"></li>
+            <li data-target="#kpkRecommendationCarousel" data-slide-to="3"></li>
+            <li data-target="#kpkRecommendationCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+ 
+  </div>
+
+  <!-- Dynamic media display section for balochistan -->
+  <div class="container" id="media-balochistan" style="display: none;">
+  
+
+    <!-- Carousel Section -->
+    <div class="row">
+      <div class="col-md-6">
+        <h2 style="text-align: center;">Houses Causes/Losses</h2>
+        <div id="balochistanCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+
+            <!-- Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Causes\Heavy Rainfall.jpg" class="d-block w-100" alt="balochistan Picture 1"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Heavy Rainfall</p></div>
+            </div>
+
+            <!-- Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Causes\Improper Land use Planning.jpg" class="d-block w-100" alt="balochistan Picture 2"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Improper Land use Planning</p></div>
+            </div>
+
+            <!-- Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Causes\Inadequate Drainage Sys.jpg" class="d-block w-100" alt="balochistan Picture 3"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Inadequate Drainage Sys</p></div>
+            </div>
+
+            <!-- Image 4 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Causes\Life Age of Buildings.jpg" class="d-block w-100" alt="balochistan Picture 4"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Life Age of Buildings</p></div>
+            </div>
+
+            <!-- Image 5 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Causes\Low Lying Areas.jpg" class="d-block w-100" alt="balochistan Picture 5"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Low Lying Areas</p></div>
+            </div>
+
+            <!-- Image 6 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Causes\Poor Construction Methodology.jpg" class="d-block w-100" alt="balochistan Picture 6"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Poor Construction Methodology</p></div>
+            </div>
+
+            <!-- Image 7 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Causes\Soil Erosion.jpg" class="d-block w-100" alt="balochistan Picture 7"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Soil Erosion</p></div>
+            </div>
+
+            <!-- Image 8 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Lossess\Flash Flood at Khost Area - Harnai District.jpg" class="d-block w-100" alt="balochistan Picture 8"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Flash Flood at Khost Area - Harnai District</p></div>
+            </div>
+
+            <!-- Image 9 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Lossess\Roof Collapsed - District Kohlu.jpg" class="d-block w-100" alt="balochistan Picture 9"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Roof Collapsed - District Kohlu</p></div>
+            </div>
+
+            <!-- Image 10 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Lossess\Roof Collapsed – Bijar Wadh.jpg" class="d-block w-100" alt="balochistan Picture 10"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Roof Collapsed – Bijar Wadh</p></div>
+            </div>
+
+          
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#balochistanCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#balochistanCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#balochistanCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#balochistanCarousel" data-slide-to="1"></li>
+            <li data-target="#balochistanCarousel" data-slide-to="2"></li>
+            <li data-target="#balochistanCarousel" data-slide-to="3"></li>
+            <li data-target="#balochistanCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2 style="text-align: center;">Houses Recommendation </h2>
+        <div id="balochistanRecommendationCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+
+            <!-- Recommendation Images -->
+            <!-- Recommendation Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Recomm\Adequate slope and Drainage System.jpg" class="d-block w-100"
+                alt="balochistan Recommendation 1" style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Adequate slope and Drainage System</p></div>
+            </div>
+
+            <!-- Recommendation Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Recomm\Confined Masonry.jpg" class="d-block w-100"
+                alt="balochistan Recommendation 2" style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Confined Masonry</p></div>
+            </div>
+
+            <!-- Recommendation Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Recomm\Improved Adobe Structures.jpg" class="d-block w-100"
+                alt="balochistan Recommendation 3" style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Improved Adobe Structures</p></div>
+            </div>
+
+            <!-- Recommendation Image 4 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary/Balochistan/10-10-2024/Residential Infra/Recomm/Pre-Cast.jpg" class="d-block w-100"
+                alt="balochistan Recommendation 4" style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Pre-Cast</p></div>
+            </div>
+
+            <!-- Recommendation Image 5 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Recomm\Pre-Fab.jpg" class="d-block w-100"
+                alt="balochistan Recommendation 5" style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Pre-Fab</p></div>
+            </div>
+
+            <!-- Recommendation Image 6 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Recomm\Weather-Resistant Sealants.jpg" class="d-block w-100"
+                alt="balochistan Recommendation 6" style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Weather-Resistant Sealants</p></div>
+            </div>
+
+           
+           
+            <!-- Video 1 -->
+            <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Residential Infra\Recomm\GIF\Pre-Fab.gif" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="carousel-caption custom-caption"><p>Pre-Fab</p></div>
+            </div>
+
+
+
+          </div>
+
+
+
+
+
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#balochistanRecommendationCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#balochistanRecommendationCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#balochistanRecommendationCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#balochistanRecommendationCarousel" data-slide-to="1"></li>
+            <li data-target="#balochistanRecommendationCarousel" data-slide-to="2"></li>
+            <li data-target="#balochistanRecommendationCarousel" data-slide-to="3"></li>
+            <li data-target="#balochistanRecommendationCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+       <!-- Carousel Section -->
+       <div class="row">
+        <div class="col-md-6">
+          <h2 style="text-align: center;">Bridges Causes/Losses</h2>
+          <div id="balochistanCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+  
+              <!-- Image 1 -->
+              <div class="carousel-item active">
+                <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Bridges\Causes\Debris Accumulation.jpg" class="d-block w-100" alt="balochistan Picture 1"
+                  style="height: 350px;">
+                  <div class="carousel-caption custom-caption"><p>Debris Accumulation</p></div>
+              </div>
+  
+              <!-- Image 2 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Bridges\Causes\Abutment Scouring.jpg" class="d-block w-100" alt="balochistan Picture 2"
+                  style="height: 350px;">
+                  <div class="carousel-caption custom-caption"><p>Abutment Scouring</p></div>
+              </div>
+  
+              <!-- Image 3 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Bridges\Causes\Choking of Culverts.jpg" class="d-block w-100" alt="balochistan Picture 3"
+                  style="height: 350px;">
+                  <div class="carousel-caption custom-caption"><p>Choking of Culverts</p></div>
+              </div>
+  
+              <!-- Image 4 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Bridges\Causes\Pier Scouring.jpg" class="d-block w-100" alt="balochistan Picture 4"
+                  style="height: 350px;">
+                  <div class="carousel-caption custom-caption"><p>Pier Scouring</p></div>
+              </div>
+  
+              <!-- Image 6 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Bridges\Lossess\Khaisar Bridge Damaged Noshki.png" class="d-block w-100" alt="balochistan Picture 6"
+                  style="height: 350px;">
+                  <div class="carousel-caption custom-caption"><p>Khaisar Bridge Damaged Noshki</p></div>
+              </div>
+  
+              <!-- Image 7 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Bridges\Lossess\Railway Bridge Damaged – Bolan.png" class="d-block w-100" alt="balochistan Picture 7"
+                  style="height: 350px;">
+                  <div class="carousel-caption custom-caption"><p>Railway Bridge Damaged – Bolan</p></div>
+              </div>
+
+            </div>
+  
+
+  
+  
+            <!-- Carousel Controls -->
+            <a class="carousel-control-prev" href="#balochistanCarousel" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#balochistanCarousel" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+  
+            <!-- Carousel Indicators -->
+            <ol class="carousel-indicators">
+              <li data-target="#balochistanCarousel" data-slide-to="0" class="active"></li>
+              <li data-target="#balochistanCarousel" data-slide-to="1"></li>
+              <li data-target="#balochistanCarousel" data-slide-to="2"></li>
+              <li data-target="#balochistanCarousel" data-slide-to="3"></li>
+              <li data-target="#balochistanCarousel" data-slide-to="4"></li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <h2 style="text-align: center;">Bridges Recommendation </h2>
+          <div id="balochistanRecommendationCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+  
+              <!-- Recommendation Images -->
+              <!-- Recommendation Image 1 -->
+              <div class="carousel-item active">
+                <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Bridges\Recomm\Grout Filled Bags.jpg" class="d-block w-100"
+                  alt="balochistan Recommendation 1" style="height: 350px;">
+                  <div class="carousel-caption custom-caption"><p>Grout Filled Bags</p></div>
+              </div>
+  
+              <!-- Recommendation Image 2 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Bridges\Recomm\Retrofitting & Inspection.jpg" class="d-block w-100"
+                  alt="balochistan Recommendation 2" style="height: 350px;">
+                  <div class="carousel-caption custom-caption"><p>Retrofitting & Inspection</p></div>
+              </div>
+  
+              <!-- Recommendation Image 3 -->
+              <div class="carousel-item">
+                <img src="Province-wise-data-Media-Gallary\Balochistan\10-10-2024\Bridges\Recomm\Riprap.jpg" class="d-block w-100"
+                  alt="balochistan Recommendation 3" style="height: 350px;">
+                  <div class="carousel-caption custom-caption"><p>Riprap</p></div>
+              </div>
+  
+              
+  
+  
+  
+            </div>
+  
+  
+  
+  
+  
+  
+            <!-- Carousel Controls -->
+            <a class="carousel-control-prev" href="#balochistanRecommendationCarousel" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#balochistanRecommendationCarousel" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+  
+            <!-- Carousel Indicators -->
+            <ol class="carousel-indicators">
+              <li data-target="#balochistanRecommendationCarousel" data-slide-to="0" class="active"></li>
+              <li data-target="#balochistanRecommendationCarousel" data-slide-to="1"></li>
+              <li data-target="#balochistanRecommendationCarousel" data-slide-to="2"></li>
+              <li data-target="#balochistanRecommendationCarousel" data-slide-to="3"></li>
+              <li data-target="#balochistanRecommendationCarousel" data-slide-to="4"></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+  
+   
+    
+  </div>
+
+
+  <!-- Dynamic media display section for punjab -->
+  <div class="container" id="media-punjab" style="display: none;">
+    <!-- Carousel Section -->
+    <div class="row">
+      <div class="col-md-6">
+        <h2 style="text-align: center;">Houses Causes/Losses</h2>
+        <div id="punjabCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+
+            <!-- Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Causes\Katcha Adobe Houses.jpg" class="d-block w-100" alt="punjab Picture 1"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Katcha Adobe Houses</p></div>
+                
+            </div>
+
+            <!-- Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Losses\Building Collapse due to Heavy Rain – DG Khan 2.jpg" class="d-block w-100" alt="punjab Picture 2"
+                style="height: 350px;">
+                <div class="carousel-caption custom-caption"><p>Building Collapse due to Heavy Rain – DG Khan 2</p></div>
+            </div>
+
+            <!-- Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Losses\Building Collapse due to Heavy Rain – DG Khan.jpg" class="d-block w-100" alt="punjab Picture 3"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Building Collapse due to Heavy Rain – DG Khan</p></div>
+            </div>
+
+            <!-- Image 4 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Losses\Building Collapse due to Heavy Rain – Gujranwala.jpg" class="d-block w-100" alt="punjab Picture 4"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Building Collapse due to Heavy Rain – Gujranwala</p></div>
+            </div>
+
+            <!-- Image 5 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Losses\Building Collapse Incident –  DG Khan.jpg" class="d-block w-100" alt="punjab Picture 5"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Building Collapse Incident –  DG Khan</p></div>
+            </div>
+
+            <!-- Image 6 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Losses\Flood at Gudpur & Basti Shahani – Dera Ghazi Khan.jpg" class="d-block w-100" alt="punjab Picture 6"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Flood at Gudpur & Basti Shahani – Dera Ghazi Khan</p></div>
+            </div>
+
+            <!-- Image 7 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Losses\Roof Collapse Incident –  DG Khan.jpg" class="d-block w-100" alt="punjab Picture 7"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Roof Collapse Incident –  DG Khan</p></div>
+            </div>
+
+            <!-- Image 8 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Losses\Roof Collapse Incident DG Khan.jpg" class="d-block w-100" alt="punjab Picture 8"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Roof Collapse Incident DG Khan</p></div>
+            </div>
+
+           
+            <!-- Video 1 -->
+            <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Losses\Videos\Building Collapse due to Heavy Rain – Kot Addu.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video><div class="carousel-caption custom-caption"><p>Building Collapse due to Heavy Rain – Kot Addu</p></div>
+            </div>
+
+            <!-- Video 2 -->
+            <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Losses\Videos\Roof Collapse Incident DG Khan.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video><div class="carousel-caption custom-caption"><p>Roof Collapse Incident DG Khan</p></div>
+            </div>
+
+            
+
+          </div>
+
+
+
+
+
+
+
+
+
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#punjabCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#punjabCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#punjabCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#punjabCarousel" data-slide-to="1"></li>
+            <li data-target="#punjabCarousel" data-slide-to="2"></li>
+            <li data-target="#punjabCarousel" data-slide-to="3"></li>
+            <li data-target="#punjabCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2 style="text-align: center;"> Houses Recommendation </h2>
+        <div id="punjabRecommendationCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+
+            <!-- Recommendation Images -->
+            <!-- Recommendation Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Recomm\Bituminous Coating Waterproofing.jpg" class="d-block w-100" alt="punjab Recommendation 1"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Bituminous Coating Waterproofing</p></div>
+            </div>
+
+            <!-- Recommendation Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Recomm\Cementitious Waterproofing.jpg" class="d-block w-100" alt="punjab Recommendation 2"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Cementitious Waterproofing</p></div>
+            </div>
+
+            <!-- Recommendation Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Recomm\CGI Sheets.jpg" class="d-block w-100" alt="punjab Recommendation 3"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>CGI Sheets</p></div>
+            </div>
+
+            <!-- Recommendation Image 4 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Recomm\Liquid Waterproofing Membrane.jpg" class="d-block w-100" alt="punjab Recommendation 4"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Liquid Waterproofing Membrane</p></div>
+            </div>
+
+            <!-- Recommendation Image 5 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Recomm\Polyurethane Liquid Membrane Waterproofing.jpg" class="d-block w-100" alt="punjab Recommendation 5"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Polyurethane Liquid Membrane Waterproofing</p></div>
+            </div>
+
+            <!-- Recommendation Image 6 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Recomm\Pre-Cast.jpg" class="d-block w-100" alt="punjab Recommendation 6"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Pre-Cast</p></div>
+            </div>
+
+            <!-- Recommendation Image 7 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Recomm\Pre-Fab.jpg" class="d-block w-100" alt="punjab Recommendation 7"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Pre-Fab</p></div>
+            </div>
+
+            <!-- Recommendation Image 8 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Recomm\Sloped Roof.jpg" class="d-block w-100" alt="punjab Recommendation 8"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Sloped Roof</p></div>
+            </div>
+
+            <!-- Recommendation Image 9 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Residential Infra\Recomm\Wooden Bracing.jpg" class="d-block w-100" alt="punjab Recommendation 9"
+                style="height: 350px;"><div class="carousel-caption custom-caption"><p>Wooden Bracing</p></div>
+            </div>
+
+           
+
+
+
+          </div>
+
+
+
+
+
+
+
+
+
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#punjabRecommendationCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#punjabRecommendationCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#punjabRecommendationCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#punjabRecommendationCarousel" data-slide-to="1"></li>
+            <li data-target="#punjabRecommendationCarousel" data-slide-to="2"></li>
+            <li data-target="#punjabRecommendationCarousel" data-slide-to="3"></li>
+            <li data-target="#punjabRecommendationCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+   <!-- Carousel Section -->
+   <!-- <div class="row">
+    <div class="col-md-6">
+      <h2 style="text-align: center;">Bridges Causes/Losses</h2>
+      <div id="punjabCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+
+         
+          <div class="carousel-item active">
+            <img src="media/punjab/Pics/losses/1.jpg" class="d-block w-100" alt="punjab Picture 1"
+              style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>punjab Picture 1</p></div>
+              
+          </div>
+
+        
+          <div class="carousel-item">
+            <img src="media/punjab/Pics/losses/2.jpg" class="d-block w-100" alt="punjab Picture 2"
+              style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>punjab Picture 1</p></div>
+          </div>
+
+        
+          <div class="carousel-item">
+            <img src="media/punjab/Pics/losses/3.jpg" class="d-block w-100" alt="punjab Picture 3"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>punjab Picture 1</p></div>
+          </div>
+
+        
+          <div class="carousel-item">
+            <img src="media/punjab/Pics/losses/4.jpg" class="d-block w-100" alt="punjab Picture 4"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>punjab Picture 1</p></div>
+          </div>
+
+     
+          <div class="carousel-item">
+            <img src="media/punjab/Pics/losses/5.jpg" class="d-block w-100" alt="punjab Picture 5"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>punjab Picture 1</p></div>
+          </div>
+
+      
+          <div class="carousel-item">
+            <img src="media/punjab/Pics/losses/6.jpg" class="d-block w-100" alt="punjab Picture 6"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>punjab Picture 1</p></div>
+          </div>
+
+          <div class="carousel-item">
+            <img src="media/punjab/Pics/losses/7.jpg" class="d-block w-100" alt="punjab Picture 7"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>punjab Picture 1</p></div>
+          </div>
+
+         
+
+       
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="media/punjab/Videos/1.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>punjab Picture 1</p></div>
+          </div>
+
+          
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+        
+        <a class="carousel-control-prev" href="#punjabCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#punjabCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+
+     
+        <ol class="carousel-indicators">
+          <li data-target="#punjabCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#punjabCarousel" data-slide-to="1"></li>
+          <li data-target="#punjabCarousel" data-slide-to="2"></li>
+          <li data-target="#punjabCarousel" data-slide-to="3"></li>
+          <li data-target="#punjabCarousel" data-slide-to="4"></li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h2 style="text-align: center;">Bridges Recommendation </h2>
+      <div id="punjabRecommendationCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="media/punjab/Pics/recommendation/1.jpg" class="d-block w-100" alt="punjab Recommendation 1"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>punjab Picture 1</p></div>
+          </div>
+
+      
+          <div class="carousel-item">
+            <img src="media/punjab/Pics/recommendation/2.jpg" class="d-block w-100" alt="punjab Recommendation 2"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>punjab Picture 1</p></div>
+          </div>
+
+    
+          <div class="carousel-item">
+            <img src="media/punjab/Pics/recommendation/3.jpg" class="d-block w-100" alt="punjab Recommendation 3"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>punjab Picture 1</p></div>
+          </div>
+
+          
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+       
+        <a class="carousel-control-prev" href="#punjabRecommendationCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#punjabRecommendationCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+
+
+        <ol class="carousel-indicators">
+          <li data-target="#punjabRecommendationCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#punjabRecommendationCarousel" data-slide-to="1"></li>
+          <li data-target="#punjabRecommendationCarousel" data-slide-to="2"></li>
+          <li data-target="#punjabRecommendationCarousel" data-slide-to="3"></li>
+          <li data-target="#punjabRecommendationCarousel" data-slide-to="4"></li>
+        </ol>
+      </div>
+    </div>
+  </div> -->
+
+
+  <!-- Carousel Section -->
+ <div class="row">
+    <div class="col-md-6">
+      <h2 style="text-align: center;">Roads Causes/Losses</h2>
+      <div id="punjabCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+
+         
+          <div class="carousel-item active">
+            <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Causes\Inadequate drainage system.jpg" class="d-block w-100" alt="punjab Picture 1"
+              style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Inadequate drainage system</p></div>
+              
+          </div>
+
+        
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Causes\Poor slope stability Measures.jpg" class="d-block w-100" alt="punjab Picture 2"
+              style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Poor slope stability Measures</p></div>
+          </div>
+
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\Bahawalpur 2.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>Bahawalpur</p></div>
+          </div>
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\Bahawalpur.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>Bahawalpur</p></div>
+          </div>
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\Bohr Bazar - Rwp.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>Bohr Bazar</p></div>
+          </div>
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\Butt Chowk Lhr.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>Butt Chowk Lhr</p></div>
+          </div>
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\DG Khan.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>DG Khan</p></div>
+          </div>
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\DHA Phase 6-Lhr.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>DHA Phase 6</p></div>
+          </div>
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\Governor House Rd-Lhr.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>Governor House Rd-Lhr</p></div>
+          </div>
+
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\GT Rd Mughalpura.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>GT Rd Mughalpura</p></div>
+          </div>
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\Johar Town Lhr.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>Johar Town Lhr</p></div>
+          </div>
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\Lahore.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>Lahore.mp4</p></div>
+          </div>
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\Lawrence College Murree.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>Lawrence College Murree</p></div>
+          </div>
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\Lhr.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>Lhr</p></div>
+          </div>
+          <div class="carousel-item">
+            <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+              <source src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Lossess\Videos\Lower Jhika Gali road, Murre.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video><div class="carousel-caption custom-caption"><p>Lower Jhika Gali road, Murree</p></div>
+          </div>
+
+          
+
+        </div>
+
+        
+        <a class="carousel-control-prev" href="#punjabCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#punjabCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+
+     
+        <ol class="carousel-indicators">
+          <li data-target="#punjabCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#punjabCarousel" data-slide-to="1"></li>
+          <li data-target="#punjabCarousel" data-slide-to="2"></li>
+          <li data-target="#punjabCarousel" data-slide-to="3"></li>
+          <li data-target="#punjabCarousel" data-slide-to="4"></li>
+          <li data-target="#punjabCarousel" data-slide-to="5"></li>
+          <li data-target="#punjabCarousel" data-slide-to="6"></li>
+          <li data-target="#punjabCarousel" data-slide-to="7"></li>
+          <li data-target="#punjabCarousel" data-slide-to="8"></li>
+          <li data-target="#punjabCarousel" data-slide-to="9"></li>
+          <li data-target="#punjabCarousel" data-slide-to="10"></li>
+          <li data-target="#punjabCarousel" data-slide-to="11"></li>
+          <li data-target="#punjabCarousel" data-slide-to="12"></li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h2 style="text-align: center;">Roads Recommendation </h2>
+      <div id="punjabRecommendationCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+
+          <div class="carousel-item active">
+            <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Recomm\Ground Anchor Wall.jpg" class="d-block w-100" alt="punjab Recommendation 1"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>Ground Anchor Wall</p></div>
+          </div>
+
+      
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Recomm\Improved Drainage System.jpg" class="d-block w-100" alt="punjab Recommendation 2"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>Improved Drainage System</p></div>
+          </div>
+
+    
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Recomm\Rectangular and Trapezoidal Drain.jpg" class="d-block w-100" alt="punjab Recommendation 3"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>Rectangular and Trapezoidal Drain</p></div>
+          </div>
+          
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Recomm\Retaining Wall.jpg" class="d-block w-100" alt="punjab Recommendation 3"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>Retaining Wall</p></div>
+          </div>
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Recomm\Shotcreting.jpg" class="d-block w-100" alt="punjab Recommendation 3"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>Shotcreting</p></div>
+          </div>
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Recomm\Soil Nailing.jpg" class="d-block w-100" alt="punjab Recommendation 3"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>Soil Nailing</p></div>
+          </div>
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary\Punjab\10-10-2024\Roads\Recomm\UNCLOGGING OF DRAINAGE SYSTEMS.jpg" class="d-block w-100" alt="punjab Recommendation 3"
+              style="height: 350px;"><div class="carousel-caption custom-caption"><p>UNCLOGGING OF DRAINAGE SYSTEMS</p></div>
+          </div>
+          
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+       
+        <a class="carousel-control-prev" href="#punjabRecommendationCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#punjabRecommendationCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+
+
+        <ol class="carousel-indicators">
+          <li data-target="#punjabRecommendationCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#punjabRecommendationCarousel" data-slide-to="1"></li>
+          <li data-target="#punjabRecommendationCarousel" data-slide-to="2"></li>
+          <li data-target="#punjabRecommendationCarousel" data-slide-to="3"></li>
+          <li data-target="#punjabRecommendationCarousel" data-slide-to="4"></li>
+        </ol>
+      </div>
+    </div>
+  </div> 
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+  <!-- Dynamic media display section for Ajk -->
+  <div class="container" id="media-Ajk" style="display: none;">
+   
+
+    <!-- Carousel Section -->
+    <div class="row">
+      <div class="col-md-6">
+        <h2 style="text-align: center;">Houses Causes/Losses</h2>
+        <div id="AjkCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+
+            <!-- Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Causes\Construction Methodology.jpg" class="d-block w-100" alt="Ajk Picture 1" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Construction Methodology</p></div>
+            </div>
+
+            <!-- Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Causes\Differential Settlement.jpg" class="d-block w-100" alt="Ajk Picture 2" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Differential Settlement</p></div>
+            </div>
+
+            <!-- Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Causes\Excessive water Load.jpg" class="d-block w-100" alt="Ajk Picture 3" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Excessive water Load</p></div>
+            </div>
+
+            <!-- Image 4 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Causes\Foundation Soil Erosion.jpg" class="d-block w-100" alt="Ajk Picture 4" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Foundation Soil Erosion</p></div>
+            </div>
+
+            <!-- Image 5 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Causes\Heavy Rainfall.jpg" class="d-block w-100" alt="Ajk Picture 5" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Heavy Rainfall</p></div>
+            </div>
+
+            <!-- Image 6 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Causes\Landslides.jpg" class="d-block w-100" alt="Ajk Picture 6" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Landslides</p></div>
+            </div>
+
+            <!-- Image 7 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Causes\Poor Drainage System.jpg" class="d-block w-100" alt="Ajk Picture 7" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Poor Drainage System</p></div>
+            </div>
+
+            <!-- Image 8 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\Bin Kharama – Mirpur.jpg" class="d-block w-100" alt="Ajk Picture 8" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Bin Kharama – Mirpur</p></div>
+            </div>
+
+            <!-- Image 9 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\District Haveli 2.jpg" class="d-block w-100" alt="Ajk Picture 9" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>District Haveli </p></div>
+            </div>
+
+            <!-- Image 10 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\District Haveli 3.jpg" class="d-block w-100" alt="Ajk Picture 10" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>District Haveli </p></div>
+            </div>
+
+            <!-- Image 11 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\District Haveli 4.jpg" class="d-block w-100" alt="Ajk Picture 11" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>District Haveli</p></div>
+            </div>
+
+            <!-- Image 12 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\District Haveli 5.jpg" class="d-block w-100" alt="Ajk Picture 12" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>District Haveli</p></div>
+            </div>
+
+            <!-- Image 13 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\District Haveli 6.jpg" class="d-block w-100" alt="Ajk Picture 13" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>District Haveli</p></div>
+            </div>
+
+            <!-- Image 14 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\District Haveli 7.jpg" class="d-block w-100" alt="Ajk Picture 14" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>District Haveli</p></div>
+            </div>
+
+            <!-- Image 15 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\District Haveli 6.jpg" class="d-block w-100" alt="Ajk Picture 15" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>District Kotli</p></div>
+            </div>
+
+            <!-- Image 16 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\District Kotli.jpg" class="d-block w-100" alt="Ajk Picture 16" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>District Kotli</p></div>
+            </div>
+
+            <!-- Image 17 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\District Mirpur.jpg" class="d-block w-100" alt="Ajk Picture 17" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>District Mirpur</p></div>
+            </div>
+
+            <!-- Image 18 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\District Sudhnuti.jpg" class="d-block w-100" alt="Ajk Picture 18" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>District Sudhnuti</p></div>
+            </div>
+
+            <!-- Image 19 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\Dolai  – Muzaffarabad.jpg" class="d-block w-100" alt="Ajk Picture 19" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Dolai  – Muzaffarabad</p></div>
+            </div>
+
+            <!-- Image 20 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\Maghlodian Road  – District Sudhnuti.jpg" class="d-block w-100" alt="Ajk Picture 20" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Maghlodian Road  – District Sudhnuti</p></div>
+            </div>
+
+            <!-- Image 21 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Lossess\Sudhnuti.jpg" class="d-block w-100" alt="Ajk Picture 21" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>Sudhnuti</p></div>
+            </div>
+
+          
+          </div>
+
+
+
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#AjkCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#AjkCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#AjkCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#AjkCarousel" data-slide-to="1"></li>
+            <li data-target="#AjkCarousel" data-slide-to="2"></li>
+            <li data-target="#AjkCarousel" data-slide-to="3"></li>
+            <li data-target="#AjkCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2 style="text-align: center;">Houses Recommendation </h2>
+        <div id="AjkRecommendationCarousel" class="carousel slide" data-ride="carousel">
+
+
+          <div class="carousel-inner">
+
+            <!-- Recommendation Images -->
+            <!-- Recommendation Image 1 -->
+            <div class="carousel-item active">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Recomm\Pitched Roof Vs Flat Roof.jpg" class="d-block w-100" alt="Ajk Recommendation 1"
+                style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Pitched Roof Vs Flat Roof</p></div>
+            </div>
+
+            <!-- Recommendation Image 2 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Recomm\Pre-Cast Houses.jpg" class="d-block w-100" alt="Ajk Recommendation 2"
+                style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Pre-Cast Houses</p></div>
+            </div>
+
+            <!-- Recommendation Image 3 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Recomm\Pre-Fabricated.jpg" class="d-block w-100" alt="Ajk Recommendation 3"
+                style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Pre-Fabricated</p></div>
+            </div>
+
+            <!-- Recommendation Image 4 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary\AJK\10-10-24\Residential\Recomm\Sloped Roof.jpg" class="d-block w-100" alt="Ajk Recommendation 4"
+                style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Sloped Roof</p></div>
+            </div>
+
+
+          </div>
+
+
+          <!-- Carousel Controls -->
+          <a class="carousel-control-prev" href="#AjkRecommendationCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#AjkRecommendationCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          <!-- Carousel Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#AjkRecommendationCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#AjkRecommendationCarousel" data-slide-to="1"></li>
+            <li data-target="#AjkRecommendationCarousel" data-slide-to="2"></li>
+            <li data-target="#AjkRecommendationCarousel" data-slide-to="3"></li>
+            <li data-target="#AjkRecommendationCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+           <!-- Carousel Section -->
+    <!-- <div class="row">
+      <div class="col-md-6">
+        <h2 style="text-align: center;">Bridges Causes/Losses</h2>
+        <div id="AjkCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+
+          
+            <div class="carousel-item active">
+              <img src="media/Ajk/Pics/losses/1.jpg" class="d-block w-100" alt="Ajk Picture 1" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+           
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/2.jpg" class="d-block w-100" alt="Ajk Picture 2" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+            
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/3.jpg" class="d-block w-100" alt="Ajk Picture 3" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+          
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/4.jpg" class="d-block w-100" alt="Ajk Picture 4" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+        
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/5.jpg" class="d-block w-100" alt="Ajk Picture 5" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+          
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/6.jpg" class="d-block w-100" alt="Ajk Picture 6" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+         
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/7.jpg" class="d-block w-100" alt="Ajk Picture 7" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+            
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/8.jpg" class="d-block w-100" alt="Ajk Picture 8" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+          
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/9.jpg" class="d-block w-100" alt="Ajk Picture 9" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+           
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/10.jpg" class="d-block w-100" alt="Ajk Picture 10" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>AJK Picture 1</p></div>
+            </div>
+
+        
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/11.jpg" class="d-block w-100" alt="Ajk Picture 11" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>AJK Picture 1</p></div>
+            </div>
+
+           
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/12.jpg" class="d-block w-100" alt="Ajk Picture 12" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p>AJK Picture 1</p></div>
+            </div>
+
+            
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/13.jpg" class="d-block w-100" alt="Ajk Picture 13" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+         
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/14.jpg" class="d-block w-100" alt="Ajk Picture 14" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+            
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/15.jpg" class="d-block w-100" alt="Ajk Picture 15" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+           
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/16.jpg" class="d-block w-100" alt="Ajk Picture 16" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+    
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/losses/17.jpg" class="d-block w-100" alt="Ajk Picture 17" style="height: 350px;">
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+            
+          
+
+           
+            <div class="carousel-item">
+              <video class="d-block w-100" autoplay loop muted playsinline style="height: 350px;">
+                <source src="media/Ajk/Videos/1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="carousel-caption custom-caption"><p></p></div>
+            </div>
+
+           
+
+          </div>
+
+
+
+
+          
+          <a class="carousel-control-prev" href="#AjkCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#AjkCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+       
+          <ol class="carousel-indicators">
+            <li data-target="#AjkCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#AjkCarousel" data-slide-to="1"></li>
+            <li data-target="#AjkCarousel" data-slide-to="2"></li>
+            <li data-target="#AjkCarousel" data-slide-to="3"></li>
+            <li data-target="#AjkCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2 style="text-align: center;">Bridges Recommendation </h2>
+        <div id="AjkRecommendationCarousel" class="carousel slide" data-ride="carousel">
+
+
+          <div class="carousel-inner">
+
+        
+            <div class="carousel-item active">
+              <img src="media/Ajk/Pics/recommendation/1.jpg" class="d-block w-100" alt="Ajk Recommendation 1"
+                style="height: 350px;">
+            </div>
+
+         
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/recommendation/2.jpg" class="d-block w-100" alt="Ajk Recommendation 2"
+                style="height: 350px;">
+            </div>
+
+        
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/recommendation/3.jpg" class="d-block w-100" alt="Ajk Recommendation 3"
+                style="height: 350px;">
+            </div>
+
+           
+            <div class="carousel-item">
+              <img src="media/Ajk/Pics/recommendation/4.jpg" class="d-block w-100" alt="Ajk Recommendation 4"
+                style="height: 350px;">
+            </div>
+
+           
+
+
+          </div>
+
+
+          
+          <a class="carousel-control-prev" href="#AjkRecommendationCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#AjkRecommendationCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+          
+          <ol class="carousel-indicators">
+            <li data-target="#AjkRecommendationCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#AjkRecommendationCarousel" data-slide-to="1"></li>
+            <li data-target="#AjkRecommendationCarousel" data-slide-to="2"></li>
+            <li data-target="#AjkRecommendationCarousel" data-slide-to="3"></li>
+            <li data-target="#AjkRecommendationCarousel" data-slide-to="4"></li>
+          </ol>
+        </div>
+      </div>
+    </div> -->
+  </div>
+
+
+ <!-- Dynamic media display section for gilgit -->
+ <div class="container" id="media-gilgit" style="display: none;">
+   
+
+  <!-- Carousel Section -->
+  <div class="row">
+    <div class="col-md-6">
+      <h2 style="text-align: center;">Houses Causes/Losses</h2>
+      <div id="gilgitCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+
+          <!-- Image 1 -->
+          <div class="carousel-item active">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Causes - Losses/Construction Methodology.jpg" class="d-block w-100" alt="Ajk Picture 1" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Construction Methodology</p></div>
+          </div>
+
+          <!-- Image 2 -->
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Causes - Losses/Differential Settlement.jpg" class="d-block w-100" alt="Ajk Picture 2" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Differential Settlement</p></div>
+          </div>
+
+          <!-- Image 3 -->
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Causes - Losses/Foundation Soil Erosion.jpg" class="d-block w-100" alt="Ajk Picture 3" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Foundation Soil Erosion</p></div>
+          </div>
+
+          <!-- Image 4 -->
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Causes - Losses/Mudslide KKH 2.jpg" class="d-block w-100" alt="Ajk Picture 4" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Mudslide KKH 2</p></div>
+          </div>
+
+          <!-- Image 5 -->
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Causes - Losses/Mudslide KKH.jpg" class="d-block w-100" alt="Ajk Picture 5" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Mudslide KKH</p></div>
+          </div>
+
+          <!-- Image 6 -->
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Causes - Losses/Roof Collapse.jpg" class="d-block w-100" alt="Ajk Picture 6" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Roof Collapse</p></div>
+          </div>
+        
+        </div>
+
+
+
+
+        <!-- Carousel Controls -->
+        <a class="carousel-control-prev" href="#gilgitCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#gilgitCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+
+        <!-- Carousel Indicators -->
+        <ol class="carousel-indicators">
+          <li data-target="#gilgitCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#gilgitCarousel" data-slide-to="1"></li>
+          <li data-target="#gilgitCarousel" data-slide-to="2"></li>
+          <li data-target="#gilgitCarousel" data-slide-to="3"></li>
+          <li data-target="#gilgitCarousel" data-slide-to="4"></li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h2 style="text-align: center;">Houses Recommendation </h2>
+      <div id="gilgitRecommendationCarousel" class="carousel slide" data-ride="carousel">
+
+
+        <div class="carousel-inner">
+          <!-- Recommendation Image 1 -->
+          <div class="carousel-item active">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Recomm/Adequate slope and Drainage System.jpg" class="d-block w-100" alt="Ajk Recommendation 1"
+              style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Adequate slope and Drainage System</p></div>
+          </div>
+
+          <!-- Recommendation Image 2 -->
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Recomm/Confined Masonry.jpg" class="d-block w-100" alt="Ajk Recommendation 2"
+              style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Confined Masonry</p></div>
+          </div>
+
+          <!-- Recommendation Image 3 -->
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Recomm/Pre-Cast Houses 1.jpg" class="d-block w-100" alt="Ajk Recommendation 3"
+              style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Pre-Cast Houses 1</p></div>
+          </div>
+
+          <!-- Recommendation Image 4 -->
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Recomm/Pre-Cast Houses 2.jpg" class="d-block w-100" alt="Ajk Recommendation 4"
+              style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Pre-Cast Houses 2</p></div>
+          </div>
+
+          <!-- Recommendation Image 5 -->
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Recomm/Pre-Cast.jpg" class="d-block w-100" alt="Ajk Recommendation 3"
+              style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Pre-Cast</p></div>
+          </div>
+            <!-- Recommendation Image 6 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Recomm/Pre-Fab.jpg" class="d-block w-100" alt="Ajk Recommendation 3"
+                style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Pre-Fab</p></div>
+            </div>
+            <!-- Recommendation Image 7 -->
+            <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Recomm/Pre-Fabricated Houses.jpg" class="d-block w-100" alt="Ajk Recommendation 3"
+                style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Pre-Fabricated  Houses</p></div>
+            </div>
+
+               <!-- Recommendation Image 8 -->
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Recomm/Sloped Roof 2.jpg" class="d-block w-100" alt="Ajk Recommendation 3"
+              style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Sloped Roof 2</p></div>
+          </div>
+
+             <!-- Recommendation Image 9 -->
+             <div class="carousel-item">
+              <img src="Province-wise-data-Media-Gallary/GB Pics/Residential/Recomm/Sloped Roof 3.jpg" class="d-block w-100" alt="Ajk Recommendation 3"
+                style="height: 350px;"> <div class="carousel-caption custom-caption"><p>Sloped Roof 3</p></div>
+            </div>
+
+        </div>
+
+
+        <!-- Carousel Controls -->
+        <a class="carousel-control-prev" href="#gilgitRecommendationCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#gilgitRecommendationCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+
+        <!-- Carousel Indicators -->
+        <ol class="carousel-indicators">
+          <li data-target="#gilgitRecommendationCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#gilgitRecommendationCarousel" data-slide-to="1"></li>
+          <li data-target="#gilgitRecommendationCarousel" data-slide-to="2"></li>
+          <li data-target="#gilgitRecommendationCarousel" data-slide-to="3"></li>
+          <li data-target="#gilgitRecommendationCarousel" data-slide-to="4"></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+         <!-- Carousel Section -->
+  <div class="row">
+    <div class="col-md-6">
+      <h2 style="text-align: center;">Bridges Causes/Losses</h2>
+      <div id="gilgitCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+
+        
+          <div class="carousel-item active">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Bridges/Causes - Losses/Abutment Scouring.jpg" class="d-block w-100" alt="Ajk Picture 1" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Abutment Scouring</p></div>
+          </div>
+
+         
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Bridges/Causes - Losses/Debris Collision.jpg" class="d-block w-100" alt="Ajk Picture 2" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Debris Collision</p></div>
+          </div>
+
+          
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Bridges/Causes - Losses/Design Deficiencies.jpg" class="d-block w-100" alt="Ajk Picture 3" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Design Deficiencies</p></div>
+          </div>
+
+        
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Bridges/Causes - Losses/Pier Scouring.jpg" class="d-block w-100" alt="Ajk Picture 4" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Pier Scouring</p></div>
+          </div>
+
+        </div>
+
+
+
+
+        
+        <a class="carousel-control-prev" href="#gilgitCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#gilgitCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+
+     
+        <ol class="carousel-indicators">
+          <li data-target="#gilgitCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#gilgitCarousel" data-slide-to="1"></li>
+          <li data-target="#gilgitCarousel" data-slide-to="2"></li>
+          <li data-target="#gilgitCarousel" data-slide-to="3"></li>
+          <li data-target="#gilgitCarousel" data-slide-to="4"></li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h2 style="text-align: center;">Bridges Recommendation </h2>
+      <div id="gilgitRecommendationCarousel" class="carousel slide" data-ride="carousel">
+
+
+        <div class="carousel-inner">
+
+          <div class="carousel-item active">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Bridges/Recomm/Grout Filled Bags.jpg" class="d-block w-100" alt="Ajk Picture 1" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Grout Filled Bags</p></div>
+          </div>
+
+         
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Bridges/Recomm/Grout Filled Bags 2.jpg" class="d-block w-100" alt="Ajk Picture 2" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Grout Filled Bags 2</p></div>
+          </div>
+
+          
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Bridges/Recomm/Retrofitting & Inspection.jpg" class="d-block w-100" alt="Ajk Picture 3" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Retrofitting & Inspection</p></div>
+          </div>
+
+        
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary/GB Pics/Bridges/Recomm/Riprap 2.jpg" class="d-block w-100" alt="Ajk Picture 4" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Riprap 2</p></div>
+          </div>
+
+          <div class="carousel-item">
+            <img src="Province-wise-data-Media-Gallary\GB Pics\Bridges\Recomm\Riprap.jpg" class="d-block w-100" alt="Ajk Picture 4" style="height: 350px;">
+            <div class="carousel-caption custom-caption"><p>Riprap</p></div>
+          </div>
+
+
+        </div>
+
+
+        
+        <a class="carousel-control-prev" href="#gilgitRecommendationCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#gilgitRecommendationCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+
+        
+        <ol class="carousel-indicators">
+          <li data-target="#gilgitRecommendationCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#gilgitRecommendationCarousel" data-slide-to="1"></li>
+          <li data-target="#gilgitRecommendationCarousel" data-slide-to="2"></li>
+          <li data-target="#gilgitRecommendationCarousel" data-slide-to="3"></li>
+          <li data-target="#gilgitRecommendationCarousel" data-slide-to="4"></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+  <!-- Overlay for enlarged image -->
+  <div id="overlay" class="overlay"></div>
+
+
+  <!-- bottom div -->
+  <div id="bottom-div">
+    <div id="moving-text">
+      <span class="bold-slide">➣</span>
+      Infrastructure disasters refer to catastrophic events involving the failure or damage of critical physical
+      structures...
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuButton = document.getElementById('menuButton');
+      const menuContainer = document.getElementById('menuContainer');
+      const subButtonContainer = document.getElementById('subButtonContainer');
+      const layerCheckbox = document.getElementById('layer1');
+
+      menuButton.addEventListener('click', function () {
+        menuContainer.classList.toggle('menu-hidden');
+      });
+
+      layerCheckbox.addEventListener('change', function () {
+        subButtonContainer.style.display = layerCheckbox.checked ? 'block' : 'none';
+      });
+
+      // Flood section
+      const subButtonContainer2 = document.getElementById('subButtonContainer2');
+      const layerCheckbox2 = document.getElementById('layer2');
+
+      layerCheckbox2.addEventListener('change', function () {
+        subButtonContainer2.style.display = layerCheckbox2.checked ? 'block' : 'none';
+      });
+
+      // Glof section
+      const subButtonContainer3 = document.getElementById('subButtonContainer3');
+      const layerCheckbox3 = document.getElementById('layer3');
+
+      layerCheckbox3.addEventListener('change', function () {
+        subButtonContainer3.style.display = layerCheckbox3.checked ? 'block' : 'none';
+      });
+      
+      // Landslide section
+      const subButtonContainer4 = document.getElementById('subButtonContainer4');
+      const layerCheckbox4 = document.getElementById('layer4');
+
+      layerCheckbox4.addEventListener('change', function () {
+        subButtonContainer4.style.display = layerCheckbox4.checked ? 'block' : 'none';
+      });
+
+      // Seismic section
+      const subButtonContainer5 = document.getElementById('subButtonContainer5');
+      const layerCheckbox5 = document.getElementById('layer5');
+
+      layerCheckbox5.addEventListener('change', function () {
+        subButtonContainer5.style.display = layerCheckbox5.checked ? 'block' : 'none';
+      });
+
+      // collapse section
+      const subButtonContainer6 = document.getElementById('subButtonContainer6');
+      const layerCheckbox6 = document.getElementById('layer6');
+
+      layerCheckbox6.addEventListener('change', function () {
+        subButtonContainer6.style.display = layerCheckbox6.checked ? 'block' : 'none';
+      });
+
+    });
+
+
+
+
+
+
+
+
+    document.getElementById('menuButton').addEventListener('click', function () {
+      var menu = document.getElementById('menuContainer');
+      if (menu.classList.contains('menu-hidden')) {
+        menu.classList.remove('menu-hidden');
+      } else {
+        menu.classList.add('menu-hidden');
+      }
+    });
+
+    // JavaScript to show/hide media sections based on checkbox selections
+    document.getElementById('layer1').addEventListener('change', function () {
+      var subButtonContainer = document.getElementById('subButtonContainer');
+      if (this.checked) {
+        subButtonContainer.classList.remove('sub-buttons-hidden');
+      } else {
+        subButtonContainer.classList.add('sub-buttons-hidden');
+        // Hide all media sections when checkbox is unchecked
+        document.querySelectorAll('.container').forEach(function (container) {
+          container.style.display = 'none';
+        });
+      }
+    });
+
+    document.querySelectorAll('.form-check-input').forEach(function (checkbox) {
+      checkbox.addEventListener('change', function () {
+        var mediaId = 'media-' + this.nextElementSibling.textContent.trim().toLowerCase().replace(/ /g, '-');
+        var mediaSection = document.getElementById(mediaId);
+        if (this.checked) {
+          mediaSection.style.display = 'block';
+        } else {
+          mediaSection.style.display = 'none';
+        }
+      });
+    });
+
+
+
+
+    document.querySelectorAll('.form-check-input').forEach(checkbox => {
+      checkbox.addEventListener('change', function () {
+        const layerId = this.nextElementSibling.innerText
+      .trim(); // Assuming label text matches the layer names in `layers`
+        console.log("Checkbox changed:", layerId, "Checked:", this.checked); // Debugging line
+        toggleLayer(layerId, this.checked);
+      });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Punjab Switch
+      const punjabSwitch = document.getElementById('flexSwitchCheckDefaultPunjab');
+      const punjabNavContainer = document.getElementById('punjabNavContainer');
+      punjabSwitch.addEventListener('change', function () {
+        punjabNavContainer.style.display = punjabSwitch.checked ? 'block' : 'none';
+      });
+
+      // Sindh Switch
+      const sindhSwitch = document.getElementById('flexSwitchCheckDefaultSindh');
+      const sindhNavContainer = document.getElementById('sindhNavContainer');
+      sindhSwitch.addEventListener('change', function () {
+        sindhNavContainer.style.display = sindhSwitch.checked ? 'block' : 'none';
+      });
+
+      // Balochistan Switch
+      const balochistanSwitch = document.getElementById('flexSwitchCheckDefaultBalochistan');
+      const balochistanNavContainer = document.getElementById('balochistanNavContainer');
+      balochistanSwitch.addEventListener('change', function () {
+        balochistanNavContainer.style.display = balochistanSwitch.checked ? 'block' : 'none';
+      });
+
+      // Similarly, add event listeners for KPK, AJ&K switches
+
+      // kpk Switch
+      const kpkSwitch = document.getElementById('flexSwitchCheckDefaultKpk');
+      const kpkNavContainer = document.getElementById('kpkNavContainer');
+      kpkSwitch.addEventListener('change', function () {
+        kpkNavContainer.style.display = kpkSwitch.checked ? 'block' : 'none';
+      });
+
+      // gb Switch
+      const gbSwitch = document.getElementById('flexSwitchCheckDefaultGb');
+      const gbNavContainer = document.getElementById('gbNavContainer');
+      gbSwitch.addEventListener('change', function () {
+        gbNavContainer.style.display = gbSwitch.checked ? 'block' : 'none';
+      });
+
+      // Ajk Switch
+      const AjkSwitch = document.getElementById('flexSwitchCheckDefaultAjk');
+      const AjkNavContainer = document.getElementById('AjkNavContainer');
+      AjkSwitch.addEventListener('change', function () {
+        AjkNavContainer.style.display = AjkSwitch.checked ? 'block' : 'none';
+      });
+
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Define the switches and corresponding containers
+      const switches = [{
+          switchId: 'flexSwitchCheckDefaultPunjab',
+          containerId: 'punjabNavContainer'
+        },
+        {
+          switchId: 'flexSwitchCheckDefaultSindh',
+          containerId: 'sindhNavContainer'
+        },
+        {
+          switchId: 'flexSwitchCheckDefaultBalochistan',
+          containerId: 'balochistanNavContainer'
+        },
+        {
+          switchId: 'flexSwitchCheckDefaultKpk',
+          containerId: 'kpkNavContainer'
+        },
+        {
+          switchId: 'flexSwitchCheckDefaultGb',
+          containerId: 'gbNavContainer'
+        },
+        {
+          switchId: 'flexSwitchCheckDefaultAjk',
+          containerId: 'AjkNavContainer'
+        }
+      ];
+
+      switches.forEach(({
+        switchId,
+        containerId
+      }) => {
+        const switchElement = document.getElementById(switchId);
+        const containerElement = document.getElementById(containerId);
+
+        if (switchElement && containerElement) {
+          // Initialize container visibility based on switch state
+          containerElement.style.display = switchElement.checked ? 'block' : 'none';
+
+          // Add change event listener to the switch
+          switchElement.addEventListener('change', function () {
+            // Toggle the display of the container based on the switch state
+            containerElement.style.display = this.checked ? 'block' : 'none';
+          });
+        } else {
+          console.error(`Element with ID "${switchId}" or "${containerId}" not found.`);
+        }
+      });
+    });
+  </script>
+
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mapbox-gl-animated-popup@latest/dist/mapbox-gl-animated-popup.min.js">
+  </script>
+  <script src="https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.umd.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="index.js"></script>
+</body>
+
+</html>
